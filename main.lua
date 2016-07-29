@@ -33,6 +33,7 @@ function love.load()
     end
     
     -- Calculate values on the side
+    number = calculate_numbers(puzzle)
     
     -- Set window properties
     love.window.setMode(block_size*(raster_width+2),block_size*(raster_height+2))
@@ -46,11 +47,11 @@ end
 function draw_raster(width, height, block_size)
     
     -- Draw horizontal lines
-    for i=0,height,1 do
+    for i=0,height do
         love.graphics.line(block_size,block_size+block_size*i,block_size+block_size*width,block_size+block_size*i)
     end
     -- Draw vertical lines
-    for i=0,width,1 do
+    for i=0,width do
         love.graphics.line(block_size*(i+1),block_size,block_size*(i+1),block_size*(height+1))
     end
 end
