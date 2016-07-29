@@ -20,6 +20,15 @@ function love.load()
     raster_width = table.getn(puzzle[1])
     raster_height = table.getn(puzzle)
     
+    -- Create empty array to draw on
+    workspace = {}
+    for y=1,raster_height do
+        workspace [y] = {}
+        for x=1,raster_width do
+            workspace [y] [x] = 0
+        end
+    end
+    
     -- Set window properties
     love.window.setMode(block_size*(raster_width+2),block_size*(raster_height+2))
     love.window.setTitle(game_name)
