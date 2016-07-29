@@ -20,6 +20,9 @@ function love.load()
     raster_width = table.getn(puzzle[1])
     raster_height = table.getn(puzzle)
     
+    block_x = 0
+    block_y = 0
+    
     -- Create empty array to draw on
     workspace = {}
     for y=1,raster_height do
@@ -28,6 +31,8 @@ function love.load()
             workspace [y] [x] = 0
         end
     end
+    
+    -- Calculate values on the side
     
     -- Set window properties
     love.window.setMode(block_size*(raster_width+2),block_size*(raster_height+2))
@@ -50,10 +55,53 @@ function draw_raster(width, height, block_size)
     end
 end
 
---function love.update(dt)
---    if 
---end
+function draw_workspace(workspace)
+    for y=1,raster_height do
+        for x=1,raster_width do
+            if workspace [y] [x] == 1 then
+                love.graphics.rectangle("fill",block_size*(x),block_size*(y),block_size,block_size)
+            end
+            if workspace [y] [x] == 2 then
+                love.graphics.line(block_size*(x),block_size*(y),block_size*(x+1),block_size*(y+1))
+                love.graphics.line(block_size*(x),block_size*(y+1),block_size*(x+1),block_size*(y))
+            end
+        end
+    end
+end
+
+function calculate_number(puzzle)
+    --this will be calculating the numbers to be printed on the side
+    return 0
+end
+
+function love.mousereleased(mouse_x,mouse_y,mouse_button)
+    if mouse_x > block_size and mouse_x < block_size*(raster_width+1) and mouse_y > block_size and mouse_y < block_size*(raster_height+1) then
+        block_x = math.floor((mouse_x)/block_size)
+        block_y = math.floor((mouse_y)/block_size)
+        if mouse_button == "l" then
+            if workspace [block_y] [block_x] == 1 then
+                workspace [block_y] [block_x] = 0
+            else
+                workspace [block_y] [block_x] = 1
+            end
+        end
+        if mouse_button == "r" then
+            if workspace [block_y] [block_x] == 2 then
+                workspace [block_y] [block_x] = 0
+            else
+                workspace [block_y] [block_x] = 2
+            end
+        end
+    end
+end
+
+function love.update(dt)
+end
 
 function love.draw()
     draw_raster(raster_width,raster_height,block_size)
+    draw_workspace(workspace)
+    love.graphics.print(block_x,0,0)
+    love.graphics.print(block_y,0,10)
+    love.graphics.print(workspace[1] [1],0,20)
 end
