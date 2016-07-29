@@ -101,7 +101,4 @@ end
 function love.draw()
     draw_raster(raster_width,raster_height,block_size)
     draw_workspace(workspace)
-    love.graphics.print(block_x,0,0)
-    love.graphics.print(block_y,0,10)
-    love.graphics.print(workspace[1] [1],0,20)
 end
