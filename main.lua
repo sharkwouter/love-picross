@@ -148,14 +148,14 @@ function love.mousereleased(mouse_x,mouse_y,mouse_button)
     if mouse_x > block_size and mouse_x < block_size*(raster_width+1) and mouse_y > block_size and mouse_y < block_size*(raster_height+1) then
         block_x = math.floor((mouse_x)/block_size)
         block_y = math.floor((mouse_y)/block_size)
-        if mouse_button == "l" then
+        if mouse_button == "l" or mouse_button == 1 then
             if workspace [block_y] [block_x] == 1 then
                 workspace [block_y] [block_x] = 0
             else
                 workspace [block_y] [block_x] = 1
             end
         end
-        if mouse_button == "r" then
+        if mouse_button == "r" or mouse_button == 2 then
             if workspace [block_y] [block_x] == 2 then
                 workspace [block_y] [block_x] = 0
             else
