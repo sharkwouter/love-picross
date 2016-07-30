@@ -78,59 +78,74 @@ end
 
 function calculate_numbers(puzzle)
     --this will be calculating the numbers to be printed on the side
-    hor_numbers = {}
+    numbers = {}
+    current_number = 0
+    
+    numbers [1] = {}
     for x=1,raster_width do
-        current_number = 0
-        hor_numbers [x] = {}
+        numbers [1][x] = {}
         for y=1,raster_height do
             if puzzle [y] [x] == 1 then
                current_number = current_number+1
-            elseif current_number > 0 and x > 1 then
-                numbers_amount = table.getn(hor_numbers [x])
-                hor_numbers [numbers_amount+1] = current_number
+            end
+            if current_number > 0 and (y == raster_height or puzzle [y+1] [x] == 0) then
+                numbers_amount = table.getn(numbers [1] [x])
+                numbers [1] [x] [numbers_amount+1] = current_number
+                current_number = 0
             end 
         end
     end
-    vert_numbers = {}
+    numbers [2] = {}
     for y=1,raster_height do
-        current_number = 0
-        vert_numbers [y] = {}
+        numbers [2] [y] = {}
         for x=1,raster_width do
             if puzzle [y] [x] == 1 then
                current_number = current_number+1
-            elseif current_number > 0 and y > 1 then
-                numbers_amount = table.getn(vert_numbers [y])
-                vert_numbers [numbers_amount+1] = current_number
+            end
+            if current_number > 0 and (x == raster_width or puzzle [y] [x+1] == 0) then
+                numbers_amount = table.getn(numbers [2] [y])
+                numbers [2] [y] [numbers_amount+1] = current_number
+                current_number = 0
             end 
         end
     end
-    numbers_full = {}
-    numbers_full [1] = hor_numbers
-    numbers_full [2] = ver_numbers
-    return numbers_full
+    return numbers
 end
 
 function draw_numbers(numbers)
---    for 
+    --draw horizontal numbers
+    for x=1,raster_width do
+        for n=1,table.getn(numbers [1] [x]) do
+            love.graphics.print(numbers [1] [x] [n],block_size*x+block_size/2-7,(n-1)*14+1)
+        end
+    end
+    --draw vertical numbers
+    for y=1,raster_height do
+        for n=1,table.getn(numbers [2] [y]) do
+            love.graphics.print(numbers [2] [y] [n],(n-1)*14+1,block_size*y+block_size/2-7)
+        end
+    end
 end
 
 -- This function is only for 2 dimensional arrays!
 -- It is used to check if the puzzle has been solved yet
-function arrays_equal(array1,array2)
+function check_solved(puzzle,workspace)
     equal = 1
-    height = table.getn(array1)
-    width = table.getn(array1[1])
+    height = table.getn(puzzle)
+    width = table.getn(puzzle[1])
     for y=1,height do
         if equal == 0 then
             break
         end
         for x=1,width do
-            if array1 [y] [x] ~= array2 [y] [x] then
+            if workspace [y] [x] == 2 then
+                workspace [y] [x] = 0
+            end
+            if puzzle [y] [x] ~= workspace [y] [x] then
                 equal = 0
             end
         end
    end
-   
    return equal
 end
 
@@ -166,7 +181,7 @@ function love.mousereleased(mouse_x,mouse_y,mouse_button)
 end
 
 function love.update(dt)
-    if arrays_equal(workspace,puzzle) == 1 then
+    if check_solved(puzzle,workspace) == 1 then
         print("Congratulations! The puzzle has been solved!")
         --reset the workspace
         workspace = load_workspace()
@@ -177,5 +192,6 @@ function love.draw()
     love.graphics.setColor(0,0,0)
     draw_raster(raster_width,raster_height,block_size)
     draw_workspace(workspace)
+    draw_numbers(numbers)
 --    draw_debug_info()
 end
