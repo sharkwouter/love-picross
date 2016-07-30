@@ -1,16 +1,6 @@
 -- This is going to be my first love2d game
 -- Wouter Wijsman aka sharkwouter 2016
 
-function load_puzzle()
-    return {
-            {0,1,1,0,0},
-            {1,1,1,1,0},
-            {0,0,1,0,0},
-            {1,1,1,1,1},
-            {0,1,1,1,0},
-           }
-end
-
 function load_workspace()
     workspace = {}
     for y=1,raster_height do
@@ -26,9 +16,9 @@ end
 function love.load()
     game_name = "love-picross"
     
+    require "puzzles/boat"
     puzzle = load_puzzle()
-    
-    block_size = 64
+
     raster_width = table.getn(puzzle[1])
     raster_height = table.getn(puzzle)
     
@@ -161,6 +151,7 @@ end
 
 function love.mousereleased(mouse_x,mouse_y,mouse_button)
     if mouse_x > block_size and mouse_x < block_size*(raster_width+1) and mouse_y > block_size and mouse_y < block_size*(raster_height+1) then
+        -- Calculate on which square has been clicked
         block_x = math.floor((mouse_x)/block_size)
         block_y = math.floor((mouse_y)/block_size)
         if mouse_button == "l" or mouse_button == 1 then
