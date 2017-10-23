@@ -24,6 +24,7 @@ function love.load()
     
     block_x = 0
     block_y = 0
+    block_size = 32
     
     -- Create empty array to draw on
     workspace = load_workspace()
